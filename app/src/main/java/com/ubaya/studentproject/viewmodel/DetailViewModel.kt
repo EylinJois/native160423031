@@ -1,6 +1,7 @@
 package com.ubaya.studentproject.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,15 +13,20 @@ import com.ubaya.studentproject.model.Student
 
 class DetailViewModel(application: Application): AndroidViewModel(application) {
     val studentLD= MutableLiveData<Student>()
+    val errorLD = MutableLiveData<Boolean>()
     val TAG:String = "Volley Tag"
     var queue: RequestQueue?=null
 
     fun fetch(student: Student){
 //        val student1 = Student("16055","Nonie","1998/03/28","5718444778",
 //            "http://dummyimage.com/75x100.jpg/cc0000/ffffff")
+        errorLD.value = false
         queue= Volley.newRequestQueue(getApplication())
         val url = "https://www.jsonkeeper.com/b/LLMW"
-        val stringreq = StringRequest(Request.Method.GET, url, {},{})
+        val stringreq = StringRequest(Request.Method.GET, url, {},{
+            Log.d("Volley_status", it.message.toString())
+            errorLD.value=true
+        })
         stringreq.tag = TAG
         queue?.add(stringreq)
 
